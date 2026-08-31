@@ -1,0 +1,40 @@
+import os
+import tkinter as tk
+from tkinter import filedialog, messagebox
+from PIL import Image
+
+def optimize_images():
+    folder_path = filedialog.askdirectory(title="इमेज वाला फोल्डर चुनें")
+    if not folder_path:
+        return
+    
+    output_folder = os.path.join(folder_path, "optimized_webp")
+    os.makedirs(output_folder, exist_ok=True)
+    
+    count = 0
+    for filename in os.listdir(folder_path):
+        if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
+            img_path = os.path.join(folder_path, filename)
+            try:
+                img = Image.open(img_path)
+                name, _ = os.path.splitext(filename)
+                output_path = os.path.join(output_folder, f"{name}.webp")
+                
+                img.save(output_path, "WEBP", quality=80)
+                count += 1
+            except Exception as e:
+                print(f"Error processing {filename}: {e}")
+                
+    messagebox.showinfo("सफलता", f"कुल {count} इमेज सफलतापूर्वक WebP में बदल दी गईं!\nफोल्डर: {output_folder}")
+
+root = tk.Tk()
+root.title("Bulk WebP Optimizer Pro")
+root.geometry("400x220")
+
+label = tk.Label(root, text="Bulk WebP & Image Optimizer", font=("Arial", 12, "bold"))
+label.pack(pady=20)
+
+btn = tk.Button(root, text="फोल्डर चुनें और बदलें", command=optimize_images, bg="#28a745", fg="white", font=("Arial", 11), padx=10, pady=5)
+btn.pack(pady=10)
+
+root.mainloop()
