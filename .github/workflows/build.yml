@@ -17,8 +17,11 @@ jobs:
       - name: Build with PyInstaller
         run: |
           pyinstaller --noconsole --onefile main.py
+      - name: Copy README to dist
+        run: |
+          copy README.txt dist/
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: WebP-Optimizer-Windows
-          path: dist/main.exe
+          path: dist/
